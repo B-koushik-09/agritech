@@ -22,10 +22,10 @@ import google.generativeai as genai
 # ---------------------------
 # Setup Gemini API key and model
 # ---------------------------
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyAk5J3uC6-H4PnwohScBOaC9tW7PyAo0Lc")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 gen_model = None
 
-if GEMINI_API_KEY and GEMINI_API_KEY != "YOUR_GEMINI_API_KEY_HERE":
+if GEMINI_API_KEY:
     try:
         genai.configure(api_key=GEMINI_API_KEY)
         gen_model = genai.GenerativeModel(
