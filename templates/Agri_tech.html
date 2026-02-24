@@ -1,0 +1,246 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #e3f2fd, #f1f8e9);
+    color: #333;
+    scroll-behavior: smooth;
+  }
+
+  header {
+    background-color: #1b5e20;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+  }
+
+  header p {
+    margin: 5px 0 0;
+    font-size: 1.2rem;
+  }
+
+  .hero-section {
+    padding: 40px;
+    text-align: center;
+  }
+
+  .hero-section h2 {
+    font-size: 2rem;
+    color: #2e7d32;
+  }
+
+  .hero-section p {
+    margin: 20px 0;
+    font-size: 1.1rem;
+  }
+
+  .form-section {
+    padding: 40px;
+    background-color: #fafafa;
+    border-radius: 10px;
+    max-width: 600px;
+    margin: 30px auto;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  input[type="file"] {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+    border: 2px solid #4caf50;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: none;
+    background-color: #2e7d32;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+
+  button:hover {
+    background-color: #1b5e20;
+    transform: translateY(-2px);
+  }
+
+  .result-wrapper {
+    display: none;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 30px;
+    flex-wrap: wrap;
+  }
+
+  .image-preview img {
+    max-width: 300px;
+    border: 2px solid #4caf50;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .result-card {
+    background-color: #ffffff;
+    border: 2px solid #4caf50;
+    border-radius: 15px;
+    padding: 30px;
+    max-width: 600px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .result-content h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #2e7d32;
+    text-align: center;
+  }
+
+  .result-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+
+  .info-section {
+    margin-top: 20px;
+  }
+
+  .info-section h3 {
+    color: #2e7d32;
+    margin-bottom: 5px;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<header>
+  <h1>🌱 Plant Pest Identifier</h1>
+  <p>Helping you identify plant pests with precision and care</p>
+</header>
+
+<div class="hero-section">
+  <h2>Upload Your Plant's Image</h2>
+  <p>Our AI will analyze and provide details about the pests along with causes, cures, and recommendations.</p>
+</div>
+
+<div class="form-section">
+  <input type="file" id="fileInput" accept="image/*">
+  <button onclick="uploadImage()">🔍 Analyze Plant</button>
+</div>
+
+<!-- Results -->
+<div class="result-wrapper" id="resultWrapper">
+  <div class="image-preview">
+    <img id="plantImage" src="" alt="Uploaded Plant" />
+  </div>
+  <div class="result-card">
+    <div class="result-content">
+      <h2 id="pestName">Pest Information</h2>
+      <p><strong>Confidence:</strong> <span id="confidence"></span>%</p>
+
+      <div class="info-section">
+        <h3>Causes</h3>
+        <div id="causes"></div>
+      </div>
+
+      <div class="info-section">
+        <h3>Cure</h3>
+        <div id="cure"></div>
+      </div>
+
+      <div class="info-section">
+        <h3>Prevention</h3>
+        <div id="prevention"></div>
+      </div>
+
+      <div class="info-section">
+        <h3>Recommendations</h3>
+        <div id="recommendations"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function uploadImage() {
+    const fileInput = document.getElementById("fileInput");
+    const resultWrapper = document.getElementById("resultWrapper");
+
+    if (!fileInput.files.length) {
+      alert("Please select an image!");
+      return;
+    }
+
+    const formData = new FormData();
+    const file = fileInput.files[0];
+    formData.append("file", file);
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById("plantImage").src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+
+    fetch("/predict", {
+      method: "POST",
+      body: formData,
+      credentials: "include"  // ✅ Important for session to work
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.error) {
+        alert("Error: " + data.error);
+        return;
+      }
+
+      document.getElementById("pestName").innerText = data.disease;
+      document.getElementById("confidence").innerText = (data.confidence * 100).toFixed(1) || "0";
+
+      const listify = (arr) => {
+        if (!arr || arr.length === 0) return "<p>N/A</p>";
+        return "<ul>" + arr.map(item => `<li>${item}</li>`).join("") + "</ul>";
+      };
+
+      document.getElementById("causes").innerHTML = listify(data.causes);
+      document.getElementById("cure").innerHTML = listify(data.cure);
+      document.getElementById("prevention").innerHTML = listify(data.prevention);
+      document.getElementById("recommendations").innerHTML = listify(data.recommendations);
+
+      resultWrapper.style.display = "flex";
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred. Check the console for details.");
+    });
+  }
+</script>
+
+{% endblock %}

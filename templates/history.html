@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .table-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+  }
+
+  .history-table {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    margin: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+
+  h2 {
+    text-align: center;
+    color: #1b5e20;
+    margin-bottom: 10px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  th, td {
+    padding: 8px 10px;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #1b5e20;
+    color: white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .pagination {
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .pagination a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #006400;
+    font-weight: bold;
+  }
+
+  .pagination strong {
+    margin: 0 5px;
+    color: #1b5e20;
+  }
+</style>
+
+<div class="table-container">
+  {% if user_history %}
+  <div class="history-table">
+    <h2>🧑 Your History</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Pest</th>
+          <th>Image</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in user_history %}
+        <tr>
+          <td>{{ item.disease }}</td>
+          <td><img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" width="70"></td>
+          <td>{{ item.timestamp }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+
+  <div class="history-table">
+    <h2>🌍 Total Website History</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Image</th>
+          <th>Pest</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in total_history %}
+        <tr>
+          <td>{{ item.user }}</td>
+          <td><img src="{{ url_for('static', filename='uploads/' + item.image_filename) }}" width="70"></td>
+          <td>{{ item.disease }}</td>
+          <td>{{ item.timestamp }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      {% if total_pages > 1 %}
+        {% for p in range(1, total_pages + 1) %}
+          {% if p == current_page %}
+            <strong>{{ p }}</strong>
+          {% else %}
+            <a href="{{ url_for('history', page=p) }}">{{ p }}</a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="hero" style="text-align:center; padding: 40px;">
+  <h1>📊 Dashboard Analytics</h1>
+  <p>Insights based on pest detections across the platform</p>
+</section>
+
+<!-- ===== TOTAL HISTORY CHARTS ===== -->
+<section style="text-align:center; margin-bottom: 60px;">
+  <h2 style="color:#2e7d32;">🌍 Total Website History</h2>
+  <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
+    <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 400px;">
+      <h3>Bar Chart</h3>
+      <canvas id="barChartTotal" width="360" height="300"></canvas>
+    </div>
+
+    <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 400px;">
+      <h3>Pie Chart</h3>
+      <canvas id="pieChartTotal" width="360" height="300"></canvas>
+    </div>
+  </div>
+</section>
+
+<!-- ===== USER HISTORY CHARTS ===== -->
+{% if session.get("user_email") %}
+<section style="text-align:center;">
+  <h2 style="color:#1565c0;">🙋 Your Personal Detection History</h2>
+  <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px;">
+    <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 400px;">
+      <h3>Bar Chart</h3>
+      <canvas id="barChartUser" width="360" height="300"></canvas>
+    </div>
+
+    <div style="background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); width: 400px;">
+      <h3>Pie Chart</h3>
+      <canvas id="pieChartUser" width="360" height="300"></canvas>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  fetch('/api/history')
+    .then(res => res.json())
+    .then(data => {
+      // === TOTAL CHARTS ===
+      const totalLabels = data.total.map(item => item.disease);
+      const totalCounts = data.total.map(item => item.count);
+
+      new Chart(document.getElementById('barChartTotal'), {
+        type: 'bar',
+        data: {
+          labels: totalLabels,
+          datasets: [{
+            label: 'Detections',
+            data: totalCounts,
+            backgroundColor: '#4caf50'
+          }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+      });
+
+      new Chart(document.getElementById('pieChartTotal'), {
+        type: 'pie',
+        data: {
+          labels: totalLabels,
+          datasets: [{
+            data: totalCounts,
+            backgroundColor: ['#4caf50', '#66bb6a', '#81c784', '#a5d6a7', '#c8e6c9']
+          }]
+        },
+        options: { responsive: true }
+      });
+
+      // === USER CHARTS ===
+      if (data.user.length > 0) {
+        const userLabels = data.user.map(item => item.disease);
+        const userCounts = data.user.map(item => item.count);
+
+        new Chart(document.getElementById('barChartUser'), {
+          type: 'bar',
+          data: {
+            labels: userLabels,
+            datasets: [{
+              label: 'Your Detections',
+              data: userCounts,
+              backgroundColor: '#4caf50'
+            }]
+          },
+          options: { responsive: true, scales: { y: { beginAtZero: true } } }
+        });
+
+        new Chart(document.getElementById('pieChartUser'), {
+          type: 'pie',
+          data: {
+            labels: userLabels,
+            datasets: [{
+              data: userCounts,
+              backgroundColor: ['#4caf50', '#66bb6a', '#81c784', '#a5d6a7', '#c8e6c9']
+            }]
+          },
+          options: { responsive: true }
+        });
+      }
+    });
+</script>
+
+{% endblock %}

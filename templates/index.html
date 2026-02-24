@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+
+<header>
+  {% if session.get('user_name') %}
+    <h1>{{ session['user_name'] }}, Welcome to AgriTech</h1>
+  {% else %}
+    <h1>🌿 Welcome to AgriTech</h1>
+  {% endif %}
+  <p>Smart Agriculture Powered by AI</p>
+</header>
+
+<section class="hero">
+  <h2>Empowering Farmers with Technology</h2>
+  <p>Analyze plant health, detect pests, and get recommendations in real-time — all through one platform.</p>
+  <a href="{{ url_for('detect') }}"><button class="btn-primary">Start Detecting</button></a>
+</section>
+
+<style>
+  header {
+    background-color: #2e7d32;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  .hero {
+    text-align: center;
+    padding: 60px 20px;
+    background: linear-gradient(to right, #f1f8e9, #e3f2fd);
+  }
+  .hero h2 {
+    font-size: 2rem;
+    color: #1b5e20;
+    margin-bottom: 20px;
+  }
+  .hero p {
+    max-width: 700px;
+    margin: auto;
+    font-size: 1.1rem;
+    color: #444;
+  }
+  .btn-primary {
+    margin-top: 30px;
+    padding: 12px 25px;
+    background-color: #388e3c;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn-primary:hover {
+    background-color: #1b5e20;
+  }
+</style>
+
+{% endblock %}
