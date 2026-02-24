@@ -17,15 +17,15 @@ A smart web application built with **Flask** that detects plant diseases from up
 
 ## 🛠 Tech Stack
 
-| Technology                   | Purpose                                        |
-|------------------------------|------------------------------------------------|
-| 🐍 Python (Flask)            | Backend, routing, and session handling         |
-| 🧠 Hugging Face Transformers | Image classification model (`efficientnet-b0`) |
-| 🤖 Google Gemini API         | AI-generated disease information               |
-| 💾 SQLite                    | Database to store users, history, and feedback |
-| 🖼️ PIL (Pillow)              | Image file processing                          |
-| 🌐 HTML + Jinja2             | Frontend templates                             |
-| 🔐 Flask Sessions            | User session management                        |
+| Technology            | Purpose                                               |
+|-----------------------|-------------------------------------------------------|
+| 🐍 Python (Flask)     | Backend, routing, and session handling                |
+| 🧠 TensorFlow / Keras | Custom CNN model (`plant_disease_model_v5.h5`)        |
+| 🤖 Google Gemini API  | AI-generated disease information and recommendations  |
+| 💾 SQLite             | Database to store users, prediction history, feedback |
+| 🖼️ PIL (Pillow)       | Image preprocessing for model input                   |
+| 🌐 HTML + Jinja2      | Frontend templates and dynamic rendering              |
+| 🔐 Flask Sessions     | User authentication and session management            |
 
 ---
 ```
@@ -116,12 +116,8 @@ Pull requests are welcome. Feel free to fork and improve the project.
 
 ---
 
-## 📄 License
 
-This project is licensed under the [MIT License](LICENSE).
 
----
-
-> 👨‍💻 Developed by [B-Karthik1324](https://github.com/B-Karthik1324) as part of a college mini project.
+> 👨‍💻 Developed by [B-koushik-09](https://github.com/B-koushik-09/agritech) 
 
 ````
