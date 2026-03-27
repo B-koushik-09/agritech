@@ -111,11 +111,3 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
----
-
-## 👨‍💻 Developer
-**B-koushik-09**
-*   GitHub: [@B-koushik-09](https://github.com/B-koushik-09)
-
----
-*Developed with ❤️ for Sustainable Agriculture.*
