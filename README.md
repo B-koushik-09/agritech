@@ -1,123 +1,121 @@
-# 🌿 AGRITECH – AI-Powered Plant Disease Detection System
+# 🌿 AgriTech – AI-Powered Plant Disease Detection System
 
-A smart web application built with **Flask** that detects plant diseases from uploaded leaf images using deep learning, and provides insights like causes, cures, and prevention using **Gemini AI**. It also features user authentication, detection history tracking, and a feedback system.
+[![Python](https://img.shields.io/badge/Python-3.9+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.12+-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
+[![Gemini AI](https://img.shields.io/badge/Gemini_AI-Flash-4285F4?style=for-the-badge&logo=google-gemini&logoColor=white)](https://ai.google.dev/)
+
+AgriTech is a professional AI-driven platform designed to empower farmers and gardeners with real-time plant disease diagnosis. By combining **Deep Learning (EfficientNet/MobileNet)** for image recognition and **Generative AI (Google Gemini)** for expert agricultural advice, AgriTech bridge the gap between technology and traditional farming.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-- 🔐 **User Authentication** – Signup, login, logout with session management
-- 🧠 **Disease Detection** – Uses `google/efficientnet-b0` via Hugging Face for image classification
-- 🤖 **Gemini AI Integration** – Generates disease-related information like causes and cures
-- 🗃 **History Tracking** – Stores prediction history per user in an SQLite database
-- 💬 **Feedback System** – Accepts feedback with rating (1–5) from users and guests
-- 📊 **Analytics API** – JSON endpoints for disease trends and feedback ratings
+*   **🔍 AI Diagnosis**: Instant identification of 15+ plant disease classes using custom-trained CNN models.
+*   **🤖 Expert Recommendations**: Integration with **Google Gemini AI** to provide detailed causes, cures, and farmer-specific recommendations.
+*   **🔐 Unified User Portal**: Secure authentication system with dashboard for tracking detection history and personal analytics.
+*   **📊 Insights & Analytics**: Real-time trends of detected diseases and user feedback visualization.
+*   **📱 Responsive Interface**: A modern, leaf-green themed UI optimized for both desktop and mobile users.
+*   **🛡️ History & Tracking**: Persistent storage of past detections with confidence scores and original images.
 
 ---
 
 ## 🛠 Tech Stack
 
-| Technology            | Purpose                                               |
-|-----------------------|-------------------------------------------------------|
-| 🐍 Python (Flask)     | Backend, routing, and session handling                |
-| 🧠 TensorFlow / Keras | Custom CNN model (`plant_disease_model_v5.h5`)        |
-| 🤖 Google Gemini API  | AI-generated disease information and recommendations  |
-| 💾 SQLite             | Database to store users, prediction history, feedback |
-| 🖼️ PIL (Pillow)       | Image preprocessing for model input                   |
-| 🌐 HTML + Jinja2      | Frontend templates and dynamic rendering              |
-| 🔐 Flask Sessions     | User authentication and session management            |
+### Backend & AI
+*   **Core**: Python (Flask)
+*   **Deep Learning**: Keras / TensorFlow (MobileNetV2 based Transfer Learning)
+*   **Generative AI**: Google Gemini Pro API
+*   **Database**: SQLite3 for User Management and History
+
+### Frontend
+*   **Templating**: Jinja2
+*   **Styling**: Modern CSS (Glassmorphism & Interactive elements)
+*   **Communication**: Fetch API / REST JSON Endpoints
 
 ---
-```
-## 📁 Folder Structure
 
+## 📁 Project Structure
+
+```text
 Agri_Tech/
-├── app.py                  # Main Flask app
-├── users.db                # SQLite database
-├── templates/              # Jinja2 HTML templates
-│   ├── index.html
-│   ├── login.html
-│   ├── signup.html
-│   ├── dashboard.html
-│   ├── Agri\_tech.html
-│   ├── feedback.html
-│   └── history.html
-├── static/
-│   └── uploads/            # Uploaded leaf images
+├── app.py                     # Main application entry point & API routes
+├── plant_disease_model_v5.h5  # Trained Deep Learning model weights
+├── class_indices_v5.json      # Mapping of model indices to disease names
+├── static/                    # CS assets and uploaded media
+│   ├── style.css              # Global styling
+│   └── uploads/               # User-uploaded leaf images (Ignored in Git)
+├── templates/                 # UI components and layouts
+│   ├── index.html             # Landing Page
+│   ├── Agri_tech.html         # Detection Hub
+│   └── dashboard.html         # User Analytics
+├── .env.example               # Example environment configuration
+├── trained_model.ipynb        # Model training and evaluation notebook
+└── requirements.txt           # Dependency manifest
 ```
-
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Quick Start
 
-### 1. 📥 Clone the repository
+### 1. Prerequisites
+*   Python 3.9 or higher
+*   Google Gemini API Key ([Get it here](https://aistudio.google.com/app/apikey))
+
+### 2. Installation
 ```bash
+# Clone the repository
 git clone https://github.com/B-koushik-09/agritech.git
 cd Agri_Tech
-````
 
-### 2. 🧪 Set up a virtual environment and install dependencies
-
-```bash
+# Set up virtual environment
 python -m venv venv
-venv\Scripts\activate         # On Windows
-# OR
-source venv/bin/activate      # On macOS/Linux
+source venv/bin/activate  # venv\Scripts\activate on Windows
 
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 3. 🔑 Configure Gemini API Key
-
-Open `app.py` and set your Gemini API key:
-
-```python
-GEMINI_API_KEY = "your-google-api-key"
+### 3. Environment Configuration
+Create a `.env` file in the root directory (this file is ignored by Git for security):
+```env
+GEMINI_API_KEY=your_actual_api_key_here
+SECRET_KEY=any_random_string_for_sessions
 ```
 
-### 4. ▶️ Run the Application
+### 4. Database Setup
+The application uses SQLite. The `users.db` file will be generated automatically in the root directory on the first launch (Ignored in Git).
 
+### 5. Launch
 ```bash
 python app.py
 ```
-
-Then open: [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
-
----
-
-## 🔗 Key Routes
-
-| Route                   | Function                                |
-| ----------------------- | --------------------------------------- |
-| `/`                     | Homepage                                |
-| `/login`, `/signup`     | User authentication                     |
-| `/detect`               | Disease detection form                  |
-| `/predict`              | Upload image and get prediction         |
-| `/history`              | View past predictions                   |
-| `/feedback`             | Submit feedback                         |
-| `/api/history`          | JSON: Disease prediction history counts |
-| `/api/feedback-ratings` | JSON: Feedback rating stats             |
+Visit `http://127.0.0.1:5000` to start using the app.
 
 ---
 
-## 📝 Notes
-
-* Ensure internet access is enabled (for Gemini AI responses)
-* Works best with clear, high-resolution leaf images
-* You can upgrade from SQLite to MySQL/PostgreSQL for production
-* Feedback from guests is stored with email: `guest` and name: `Anonymous`
+## 🧠 Model Information
+The system uses a **MobileNetV2** architecture fine-tuned on the **PlantVillage** dataset. It currently supports detection for:
+*   **Tomato**: Bacterial Spot, Early Blight, Late Blight, Leaf Mold, etc.
+*   **Potato**: Early Blight, Late Blight, Healthy.
+*   **Pepper**: Bacterial Spot, Healthy.
 
 ---
 
 ## 🤝 Contributing
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-Pull requests are welcome. Feel free to fork and improve the project.
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
+## 👨‍💻 Developer
+**B-koushik-09**
+*   GitHub: [@B-koushik-09](https://github.com/B-koushik-09)
 
-
-> 👨‍💻 Developed by [B-koushik-09](https://github.com/B-koushik-09/agritech) 
-
-````
+---
+*Developed with ❤️ for Sustainable Agriculture.*
